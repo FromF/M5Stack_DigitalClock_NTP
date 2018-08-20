@@ -71,18 +71,22 @@ void setup(void) {
 #if ENABLE_NTP_SERVER
   //connect to WiFi
   Serial.printf("Connecting to %s ", ssid);
+  M5.Lcd.print("Connecting");
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    M5.Lcd.print(".");
   }
   Serial.println(" CONNECTED");
+  M5.Lcd.println(" CONNECTED");
 
   //init and get the time
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   struct tm timeinfo;
   if (getLocalTime(&timeinfo)) {
     Serial.println("Time Set OK...");
+    M5.Lcd.println("Time Set OK...");
   } else {
     hh = 0;
     mm = 0;
@@ -91,6 +95,7 @@ void setup(void) {
   //disconnect WiFi as it's no longer needed
   WiFi.disconnect(true);
   WiFi.mode(WIFI_OFF);
+  M5.Lcd.fillScreen(BLACK);
 #else   //ENABLE_NTP_SERVER
   targetTime = millis() + 1000;
 #endif  //ENABLE_NTP_SERVER
